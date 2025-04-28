@@ -1,4 +1,5 @@
 import * as restify from "restify";
+import { Server } from "socket.io";
 
 const respond = (
   req: restify.Request,
@@ -10,6 +11,12 @@ const respond = (
 };
 
 const server = restify.createServer();
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+});
+
 server.get("/", respond);
 server.head("/", respond);
 

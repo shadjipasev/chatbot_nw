@@ -13,8 +13,12 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "mongoose": "^8.14.0",
+    "mongoose-timestamp": "^0.6.0",
     "nodemon": "^3.1.10",
-    "restify": "^11.1.0"
+    "restify": "^11.1.0",
+    "restify-errors": "^8.0.2",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
