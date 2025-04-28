@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# Build output
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+*.log
+
+# Editor and IDE artifacts
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tsbuildinfo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Coverage data
+coverage/
+
+tsconfig.json
+*.tsbuildinfo
+
+# Optional: If you're using a bundler like Webpack or Rollup
+# /public/build/*
