@@ -3,6 +3,7 @@ import connectMongo from "./configs/mongo.config";
 import * as dotenv from "dotenv";
 import { Server as SocketIoServer } from "socket.io";
 import { handleSocketConnection } from "./controllers/socket.controller";
+import { chatConfigRoutes } from "./routes/chat-config.routes";
 
 dotenv.config();
 connectMongo();
@@ -16,7 +17,11 @@ const respond = (
   next();
 };
 
-const server = restify.createServer();
+export const server = restify.createServer();
+chatConfigRoutes(server);
+
+server.use(restify.plugins.bodyParser());
+
 const io = new SocketIoServer(server.server, {
   cors: {
     origin: "http://localhost:3000",
