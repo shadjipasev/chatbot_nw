@@ -1,4 +1,9 @@
 import * as restify from "restify";
+import connectMongo from "./configs/mongo.config";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+connectMongo();
 
 const respond = (
   req: restify.Request,
@@ -10,6 +15,7 @@ const respond = (
 };
 
 const server = restify.createServer();
+server.use(restify.plugins.bodyParser());
 server.get("/", respond);
 server.head("/", respond);
 
