@@ -18,7 +18,7 @@ const configBlockSchema = new Schema<IBlock>({
 const chatConfigSchema = new Schema<IChatConfig>({
   blocks: [configBlockSchema],
   startBlock: { type: String, required: true },
-  timestamp: { type: Date, required: true, default: Date.now() },
+  timestamp: { type: Date, required: true, default: Date.now },
 });
 
 export const ChatConfig = mongoose.model("ChatConfig", chatConfigSchema);
