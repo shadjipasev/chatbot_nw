@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import { Server as SocketIoServer } from "socket.io";
 import { handleSocketConnection } from "./controllers/socket.controller";
 import { chatConfigRoutes } from "./routes/chat-config.routes";
+import OpenAI from "openai";
 
 dotenv.config();
 connectMongo();
@@ -22,6 +23,10 @@ chatConfigRoutes(server);
 
 server.use(restify.plugins.bodyParser());
 
+export const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY as string,
+});
+
 const io = new SocketIoServer(server.server, {
   cors: {
     origin: "http://localhost:3000",
@@ -29,6 +34,7 @@ const io = new SocketIoServer(server.server, {
     credentials: true,
   },
 });
+io.setMaxListeners(10);
 
 handleSocketConnection(io);
 
