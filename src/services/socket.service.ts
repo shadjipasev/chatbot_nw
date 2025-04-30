@@ -6,8 +6,9 @@ export const setActiveSocket = (socket: Socket) => {
   activeSocket = socket;
 };
 
-export const sendMessageToClient = (content: string) => {
+export const sendMessageToClient = async (content: string) => {
   try {
+    // console.log(activeSocket.)
     activeSocket.emit("message_from_server", content);
     console.log("message_from_server: " + content);
   } catch (error) {

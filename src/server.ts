@@ -34,7 +34,6 @@ const io = new SocketIoServer(server.server, {
     credentials: true,
   },
 });
-io.setMaxListeners(10);
 
 handleSocketConnection(io);
 

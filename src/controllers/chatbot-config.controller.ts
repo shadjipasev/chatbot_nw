@@ -1,5 +1,5 @@
 import { Request, Response } from "restify";
-import { createChatConfig } from "../services/chatbot-config.services";
+import { createChatConfig } from "../services/chatbot-config.service";
 
 export const createConfig = async (req: Request, res: Response) => {
   const jsonCongif = req.body;
