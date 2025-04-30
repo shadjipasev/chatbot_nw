@@ -1,5 +1,7 @@
+import ChatHistory, { IChatHistory } from "src/models/chat-history.schema";
 import { getMostRecentConfig } from "./chatbot-config.service";
 import { sendMessageToClient } from "./socket.service";
+import { FilterQuery } from "mongoose";
 
 export const sendInitialMessage = async () => {
   const config = await getMostRecentConfig();
@@ -15,4 +17,26 @@ export const sendInitialMessage = async () => {
   console.log("startingBlock -- " + startingBlock);
 
   await sendMessageToClient(startingBlock.content);
+};
+
+export const getMostRecentMessage = async (): Promise<IChatHistory> => {
+  try {
+    const message = await ChatHistory.findOne().sort({ _id: -1 });
+    return message;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const searchHistory = async (
+  query: FilterQuery<IChatHistory>
+): Promise<IChatHistory> => {
+  try {
+    const interaction = await ChatHistory.findOne(query);
+    return interaction;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
