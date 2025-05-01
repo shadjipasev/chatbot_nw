@@ -1,4 +1,4 @@
-import ChatHistory, { IChatHistory } from "src/models/chat-history.schema";
+import ChatHistory, { IChatHistory } from "../models/chat-history.schema";
 import { getMostRecentConfig } from "./chatbot-config.service";
 import { sendMessageToClient } from "./socket.service";
 import { FilterQuery } from "mongoose";

@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { BlockTypes, IBlock, IChatConfig } from "./types/config.interface";
 
-const configBlockSchema = new Schema<IBlock>({
+export const configBlockSchema = new Schema<IBlock>({
   id: { type: String, required: true },
   type: { type: String, enum: BlockTypes },
   content: { type: String, required: false },
