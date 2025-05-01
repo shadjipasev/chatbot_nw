@@ -5,6 +5,7 @@ import { Server as SocketIoServer } from "socket.io";
 import { handleSocketConnection } from "./controllers/socket.controller";
 import { chatConfigRoutes } from "./routes/chat-config.routes";
 import OpenAI from "openai";
+import { historyRoutes } from "./routes/history.route";
 
 dotenv.config();
 connectMongo();
@@ -20,6 +21,7 @@ const respond = (
 
 export const server = restify.createServer();
 chatConfigRoutes(server);
+historyRoutes(server);
 
 server.use(restify.plugins.bodyParser());
 
