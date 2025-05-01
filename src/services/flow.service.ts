@@ -1,22 +1,25 @@
-import ChatHistory, { IChatHistory } from "src/models/chat-history.schema";
-import { getMostRecentConfig } from "./chatbot-config.service";
+import ChatHistory, { IChatHistory } from "../models/chat-history.schema";
+import { getBlock, getMostRecentConfig } from "./chatbot-config.service";
 import { sendMessageToClient } from "./socket.service";
 import { FilterQuery } from "mongoose";
 
 export const sendInitialMessage = async () => {
-  const config = await getMostRecentConfig();
-
-  //   console.log("config -- " + config);
-  //   console.log("config.startBlock -- " + config.startBlock);
-
-  const startingBlock = config.blocks.find((block) => {
-    // console.log("block.id -- " + block.id);
-    return block.id === config.startBlock;
-  });
-
-  console.log("startingBlock -- " + startingBlock);
-
+  const startingBlock = await getBlock("start_block");
   await sendMessageToClient(startingBlock.content);
+  await ChatHistory.create({
+    userMessage: "",
+    botMessage: startingBlock.content,
+    currentBlock: startingBlock,
+  });
+};
+
+export const handleMessage = async (message?: string) => {
+  const isInitialized = await searchHistory({ id: "start_message" });
+  if (!isInitialized) {
+    await sendInitialMessage();
+  }
+  const currentBlock = await getBlock("start_block");
+  console.log("startingBlock -- " + currentBlock);
 };
 
 export const getMostRecentMessage = async (): Promise<IChatHistory> => {
