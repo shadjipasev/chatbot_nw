@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
+import { sendInitialMessage } from "../services/flow.service";
+import { flowController } from "./flow.controller";
 import { setActiveSocket } from "../services/socket.service";
-import { handleMessage, sendInitialMessage } from "../services/flow.service";
 
 export const handleSocketConnection = (io: Server) => {
   io.on("connection", async (socket: Socket) => {
@@ -8,8 +9,8 @@ export const handleSocketConnection = (io: Server) => {
     setActiveSocket(socket);
     sendInitialMessage();
     socket.on("message_from_client", async (data) => {
-      await handleMessage(data);
-      console.log("Message Received ", data);
+      await flowController(data);
+      console.log("message_from_client", data);
     });
   });
 };

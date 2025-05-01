@@ -4,6 +4,10 @@ import { getBlock, getMostRecentConfig } from "./chatbot-config.service";
 import { sendMessageToClient } from "./socket.service";
 import { FilterQuery } from "mongoose";
 import { intentDetection } from "./openai.service";
+import {
+  getCurrentBlock,
+  setCurrentBlock,
+} from "../controllers/flow.controller";
 
 export const sendInitialMessage = async () => {
   const startingBlock = await getBlock("start_block");
@@ -19,14 +23,18 @@ export const sendInitialMessage = async () => {
         },
       ],
     });
+
+    const getNextBlock = getBlock(startingBlock.next);
+
+    setCurrentBlock(await getNextBlock);
   } catch (error) {
     console.log("sendInitialMessage error: " + error);
     throw error;
   }
 };
 
-export const handleMessage = async (message: string) => {
-  const currentBlock = getMostRecentMessage;
+export const handleResponseMessage = async (message: string) => {
+  const currentBlock = getCurrentBlock;
 };
 
 export const getMostRecentMessage = async (): Promise<IChatHistory> => {

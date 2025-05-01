@@ -10,6 +10,7 @@ export const createChatConfig = async (
 
 export const getMostRecentConfig = async (): Promise<IChatConfig> => {
   const latestConfig = await ChatConfig.findOne().sort({ _id: -1 });
+  // console.log(latestConfig);
   latestConfig;
   return latestConfig;
 };

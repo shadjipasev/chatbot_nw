@@ -1,5 +1,6 @@
 import { openai } from "../server";
 import { BlockTypes, IBlock } from "src/models/types/config.interface";
+import { getBlock } from "./chatbot-config.service";
 
 export const intentDetection = async (
   userResponse: string,
@@ -23,8 +24,20 @@ export const intentDetection = async (
       //   response_format: { type: "json_object" },
       temperature: 0.2,
     });
-    const recognisedIntent = response.choices[0].message.content;
-    console.log(recognisedIntent);
+    const recognisedIntent = configBlock.intents.find(
+      (intent) => intent.name === response.choices[0].message.content
+    );
+
+    // If no intent recognized - fallback
+    if (!recognisedIntent) {
+      console.log("Unable to determine. Please provide more information.");
+      return await getBlock(configBlock.fallback);
+    }
+
+    console.log("33 (openai) recognisedIntent -" + recognisedIntent);
+    // console.log("33 (openai) nextBlockId -" + nextBlockId);
+
+    return await getBlock(recognisedIntent.next);
   } catch (error) {
     console.log("Error detecting intents:", error);
     throw error;
