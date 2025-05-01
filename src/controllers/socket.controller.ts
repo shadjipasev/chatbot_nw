@@ -6,7 +6,7 @@ export const handleSocketConnection = (io: Server) => {
   io.on("connection", async (socket: Socket) => {
     console.log("Connected socket", socket.id);
     setActiveSocket(socket);
-
+    sendInitialMessage();
     socket.on("message_from_client", async (data) => {
       await handleMessage(data);
       console.log("Message Received ", data);
