@@ -1,4 +1,5 @@
-import mongoose, { Schema } from "mongoose";
+import { Document } from "./../../node_modules/bson/src/bson";
+import mongoose, { InferSchemaType, Model, Mongoose, Schema } from "mongoose";
 import { IBlock } from "./types/config.interface";
 import { ChatRole } from "./types/chat.interface";
 import { configBlockSchema } from "./config.schema";
@@ -7,7 +8,7 @@ export interface IMessage {
   role: ChatRole;
   message: string;
   currentBlock: IBlock;
-  timestamp: Date;
+  timestamp?: Date;
 }
 
 export interface IChatHistory {
@@ -18,13 +19,18 @@ const messageSchema = new Schema<IMessage>({
   role: { type: String, enum: ChatRole, required: true },
   message: { type: String, required: true },
   currentBlock: [configBlockSchema],
-  timestamp: { type: Date, required: true, default: Date.now },
+  timestamp: { type: Date, default: Date.now },
 });
 
 const chatHistorySchema = new Schema<IChatHistory>({
   messages: [messageSchema],
 });
 
-const ChatHistory = mongoose.model("ChatHistory", chatHistorySchema);
+export type HistoryDoc = IChatHistory & Document;
 
-export default ChatHistory;
+export const ChatHistory = mongoose.model<HistoryDoc>(
+  "ChatHistory",
+  chatHistorySchema
+);
+
+// type UserModel = Model<IChatHistory, {}, ChatHistory>;
