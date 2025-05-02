@@ -1,6 +1,6 @@
 export enum BlockTypes {
   WriteMessage = "write_message",
-  WaitForResponse = "wait_response",
+  WaitForResponse = "wait_for_response",
   DetectIntent = "detect_intent",
 }
 

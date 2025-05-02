@@ -1,8 +1,13 @@
 import { openai } from "../server";
-import { BlockTypes, IBlock } from "src/models/types/config.interface";
+import {
+  BlockTypes,
+  IBlock,
+  IChatConfig,
+} from "src/models/types/config.interface";
 import { getBlock } from "./chatbot-config.service";
 
 export const intentDetection = async (
+  configFlow: IChatConfig,
   userResponse: string,
   configBlock: IBlock
 ) => {
@@ -31,13 +36,13 @@ export const intentDetection = async (
     // If no intent recognized - fallback
     if (!recognisedIntent) {
       console.log("Unable to determine. Please provide more information.");
-      return await getBlock(configBlock.fallback);
+      return getBlock(configFlow, configBlock.fallback);
     }
 
     console.log("33 (openai) recognisedIntent -" + recognisedIntent);
     // console.log("33 (openai) nextBlockId -" + nextBlockId);
 
-    return await getBlock(recognisedIntent.next);
+    return getBlock(configFlow, recognisedIntent.next);
   } catch (error) {
     console.log("Error detecting intents:", error);
     throw error;

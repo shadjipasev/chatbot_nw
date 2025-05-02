@@ -1,58 +1,42 @@
-import { ChatConfig } from "src/models/config.schema";
-import {
-  BlockTypes,
-  IBlock,
-  IChatConfig,
-} from "./../models/types/config.interface";
-import { getBlock } from "../services/chatbot-config.service";
+import { BlockTypes } from "./../models/types/config.interface";
+import {} from "../services/chatbot-config.service";
 import { intentDetection } from "../services/openai.service";
 import { sendMessageToClient } from "../services/socket.service";
-
-let currentBlock: IBlock | null = null;
-
-export const setCurrentBlock = (block: IBlock) => {
-  currentBlock = block;
-};
-
-export const getCurrentBlock = () => {
-  return currentBlock;
-};
+import {
+  getConfig,
+  getCurrentBlock,
+  setCurrentBlock,
+} from "../services/flow.service";
 
 export const flowController = async (message: string) => {
-  //   console.log(JSON.stringify(currentBlock));
+  let current = getCurrentBlock();
+  let config = getConfig();
 
-  console.log("23 currentBlock.id == " + currentBlock.id);
+  //   console.log("Before WaitForResponse Type", current.type);
+  //   console.log("Before WaitForResponse Id", current.id);
 
-  setCurrentBlock(await getBlock(currentBlock.next));
+  if (current.type === BlockTypes.WaitForResponse) {
+    console.log("Wait for response");
+    setCurrentBlock(current.next);
+    current = getCurrentBlock();
+  }
 
-  if (currentBlock.type === BlockTypes.DetectIntent) {
-    console.log("23 currentBlock.id == " + currentBlock.id);
-    try {
-      // Ask openAI for intention
-      const recognizedNextBlock = await intentDetection(message, currentBlock);
-      console.log(recognizedNextBlock.id);
+  //   console.log("Before DetectIntent Type", current.type);
+  //   console.log("Before DetectIntent Id", current.id);
 
-      // Send to client intention content
-      sendMessageToClient(recognizedNextBlock.content);
+  if (current.type === BlockTypes.DetectIntent) {
+    const intendedReply = await intentDetection(config, message, current);
+    sendMessageToClient(intendedReply.content);
+    setCurrentBlock(intendedReply.next);
+    current = getCurrentBlock();
+  }
 
-      // If no intent recognized return fallback block
-      if (recognizedNextBlock.id === currentBlock.fallback) {
-        setCurrentBlock(recognizedNextBlock);
-        return;
-      }
-
-      const nextBlock = await getBlock(recognizedNextBlock.next);
-
-      setCurrentBlock(await getBlock(currentBlock.next));
-      console.log("43: recognizedNextBlock.id -" + recognizedNextBlock.id);
-      console.log("44: nextBlock -" + nextBlock.id);
-
-      // Ask if anything else
-      sendMessageToClient(nextBlock.content);
-      setCurrentBlock(nextBlock);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+  //   console.log("Before WriteMessage Type", current.type);
+  //   console.log("Before WriteMessage Id", current.id);
+  if (current.type === BlockTypes.WriteMessage) {
+    sendMessageToClient(current.content);
+    setCurrentBlock(current.next);
+    // console.log("After WriteMessage Id", current.id);
+    // console.log("After WriteMessage NEXT", current.next);
   }
 };

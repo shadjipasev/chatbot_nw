@@ -11,14 +11,12 @@ export const createChatConfig = async (
 export const getMostRecentConfig = async (): Promise<IChatConfig> => {
   const latestConfig = await ChatConfig.findOne().sort({ _id: -1 });
   // console.log(latestConfig);
-  latestConfig;
+  // latestConfig;
   return latestConfig;
 };
 
-export const getBlock = async (blockId: string): Promise<IBlock> => {
-  const currentCongif = await getMostRecentConfig();
-
-  const block = currentCongif.blocks.find((block) => block.id === blockId);
+export const getBlock = (config: IChatConfig, blockId: string): IBlock => {
+  const block = config.blocks.find((block) => block.id === blockId);
 
   return block;
 };
