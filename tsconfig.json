@@ -10,6 +10,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src",
+    "types": ["jest"],
     "paths": {
       "src/*": ["*"]
     },
@@ -20,5 +21,6 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": ["src/**/*.ts", "tests/**/*.test.ts"]
 }
