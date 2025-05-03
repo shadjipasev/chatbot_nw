@@ -7,11 +7,11 @@ export const getHistoryById = async (req: Request, res: Response) => {
 
   try {
     const history = await searchHistory({ _id: id });
-    res.json({
+
+    res.send(200, {
+      message: `Successfuly  retrieved history conversation with id:${id}`,
       data: history,
     });
-    console.log(history);
-    return history;
   } catch (error) {
     throw new BadRequestError({
       message: "Unable to get history record",
