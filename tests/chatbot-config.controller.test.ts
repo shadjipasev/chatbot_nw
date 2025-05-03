@@ -28,7 +28,9 @@ describe("Chatbot Config Controller", () => {
       const app = await createApp();
 
       (createChatConfig as jest.Mock).mockResolvedValue(mockConfig);
-      const response = await request(app).post("/config").send(mockConfig);
+      const response = await request(app.server)
+        .post("/config")
+        .send(mockConfig);
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual({
@@ -43,7 +45,7 @@ describe("Chatbot Config Controller", () => {
       const app = await createApp();
 
       (getMostRecentConfig as jest.Mock).mockResolvedValue(mockConfig);
-      const response = await request(app).get("/config");
+      const response = await request(app.server).get("/config");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({

@@ -46,21 +46,23 @@ export async function createApp() {
     },
   });
 
+  handleSocketConnection(io);
+
   server.use(restify.plugins.bodyParser());
   server.use(restify.plugins.queryParser());
   server.on("uncaughtException", errorHandler);
 
   if (process.env.NODE_ENV !== "test") {
-    await connectMongo();
-    handleSocketConnection(io);
     await setConfig();
+
+    await connectMongo();
 
     server.listen(3000, () => {
       console.log("%s listening at %s", server.name, server.url);
     });
   }
 
-  return server;
+  return { server, io };
 }
 
 export const openai = new OpenAI({
