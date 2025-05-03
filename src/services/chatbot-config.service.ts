@@ -4,7 +4,7 @@ import { InternalServerError, NotFoundError } from "restify-errors";
 import { error } from "console";
 
 export const createChatConfig = async (
-  jsonConfig: JSON
+  jsonConfig: IChatConfig
 ): Promise<IChatConfig> => {
   const chatConfig = await ChatConfig.create(jsonConfig);
   return chatConfig;

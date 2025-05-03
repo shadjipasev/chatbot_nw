@@ -17,7 +17,7 @@ services:
     depends_on:
       - mongodb
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/chatbot-nw
+      # - MONGO_URI=mongodb://mongodb:27017/chatbot-nw
 
 volumes:
   mongo-data:

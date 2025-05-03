@@ -13,7 +13,7 @@ import { InternalServerError } from "restify-errors";
 dotenv.config();
 
 try {
-  start();
+  createApp();
 } catch (error) {
   throw new InternalServerError({
     message: "Failed to initialize server!",
@@ -21,10 +21,8 @@ try {
   });
 }
 
-async function start() {
+export async function createApp() {
   const server = restify.createServer();
-
-  await connectMongo();
 
   const respond = (
     req: restify.Request,
@@ -48,17 +46,21 @@ async function start() {
     },
   });
 
-  await setConfig();
-
-  handleSocketConnection(io);
-
   server.use(restify.plugins.bodyParser());
   server.use(restify.plugins.queryParser());
   server.on("uncaughtException", errorHandler);
 
-  server.listen(3000, () => {
-    console.log("%s listening at %s", server.name, server.url);
-  });
+  if (process.env.NODE_ENV !== "test") {
+    await connectMongo();
+    handleSocketConnection(io);
+    await setConfig();
+
+    server.listen(3000, () => {
+      console.log("%s listening at %s", server.name, server.url);
+    });
+  }
+
+  return server;
 }
 
 export const openai = new OpenAI({

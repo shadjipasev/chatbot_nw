@@ -21,6 +21,6 @@ export interface IBlock {
 export interface IChatConfig {
   blocks: IBlock[];
   startBlock: string;
-  timestamp: Date;
-  active: boolean;
+  timestamp?: Date;
+  active?: boolean;
 }
