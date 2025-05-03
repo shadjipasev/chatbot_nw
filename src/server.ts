@@ -7,6 +7,10 @@ import { chatConfigRoutes } from "./routes/chat-config.routes";
 import OpenAI from "openai";
 import { historyRoutes } from "./routes/history.route";
 import { setConfig } from "./services/flow.service";
+import { errorHandler } from "./common/error.handler";
+
+try {
+} catch (error) {}
 
 dotenv.config();
 connectMongo();
@@ -26,6 +30,7 @@ chatConfigRoutes(server);
 historyRoutes(server);
 
 server.use(restify.plugins.bodyParser());
+server.on("uncaughtException", errorHandler);
 
 export const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY as string,
