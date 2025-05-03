@@ -1,5 +1,7 @@
 import { IBlock, IChatConfig } from "src/models/types/config.interface";
 import { ChatConfig } from "../models/config.schema";
+import { InternalServerError, NotFoundError } from "restify-errors";
+import { error } from "console";
 
 export const createChatConfig = async (
   jsonConfig: JSON
@@ -9,14 +11,25 @@ export const createChatConfig = async (
 };
 
 export const getMostRecentConfig = async (): Promise<IChatConfig> => {
-  const latestConfig = await ChatConfig.findOne().sort({ _id: -1 });
-  // console.log(latestConfig);
-  // latestConfig;
-  return latestConfig;
+  try {
+    const latestConfig = await ChatConfig.findOne().sort({ _id: -1 });
+    return latestConfig;
+  } catch (error) {
+    throw new InternalServerError({
+      message: "Failed to retrieve most recent configuration",
+      cause: error,
+    });
+  }
 };
 
 export const getBlock = (config: IChatConfig, blockId: string): IBlock => {
   const block = config.blocks.find((block) => block.id === blockId);
+
+  if (!block) {
+    throw new NotFoundError({
+      message: `${block.id} block not found`,
+    });
+  }
 
   return block;
 };
