@@ -7,6 +7,7 @@ import { sendMessageToClient } from "./socket.service";
 import { FilterQuery, Mongoose } from "mongoose";
 import {} from "../controllers/flow.controller";
 import { IBlock, IChatConfig } from "src/models/types/config.interface";
+import { InternalServerError } from "restify-errors";
 
 let currentBlock: IBlock | null = null;
 let config: IChatConfig | null = null;
@@ -44,13 +45,11 @@ export const sendInitialMessage = async () => {
 
     setCurrentBlock(startingBlock.next);
   } catch (error) {
-    console.log("sendInitialMessage error: " + error);
-    throw error;
+    throw new InternalServerError({
+      message: "Failed to send initial message.",
+      cause: error,
+    });
   }
-};
-
-export const handleResponseMessage = async (message: string) => {
-  const currentBlock = getCurrentBlock;
 };
 
 export const getMostRecentConversation = async (): Promise<HistoryDoc> => {
@@ -58,8 +57,10 @@ export const getMostRecentConversation = async (): Promise<HistoryDoc> => {
     const message = await ChatHistory.findOne().sort({ _id: -1 });
     return message;
   } catch (error) {
-    console.log(error);
-    throw error;
+    throw new InternalServerError({
+      message: "Failed to retrieve most recent conversation",
+      cause: error,
+    });
   }
 };
 
@@ -69,13 +70,22 @@ export const searchHistory = async (query: FilterQuery<HistoryDoc>) => {
     const interaction = await ChatHistory.findOne(query);
     return interaction;
   } catch (error) {
-    console.log(error);
-    throw error;
+    throw new InternalServerError({
+      messag: "Failed to retrieve history",
+      cause: error,
+    });
   }
 };
 
 export const addMessageToConversation = async (messageBlock: IMessage) => {
-  const conversation = await getMostRecentConversation();
-  conversation.messages.push(messageBlock);
-  await conversation.save();
+  try {
+    const conversation = await getMostRecentConversation();
+    conversation.messages.push(messageBlock);
+    await conversation.save();
+  } catch (error) {
+    throw new InternalServerError({
+      message: "Failed to add message to conversation",
+      cause: error,
+    });
+  }
 };

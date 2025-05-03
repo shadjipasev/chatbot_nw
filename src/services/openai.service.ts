@@ -5,6 +5,7 @@ import {
   IChatConfig,
 } from "src/models/types/config.interface";
 import { getBlock } from "./chatbot-config.service";
+import { InternalServerError } from "restify-errors";
 
 export const intentDetection = async (
   configFlow: IChatConfig,
@@ -44,16 +45,9 @@ export const intentDetection = async (
 
     return getBlock(configFlow, recognisedIntent.next);
   } catch (error) {
-    console.log("Error detecting intents:", error);
-    throw error;
+    throw new InternalServerError({
+      message: "Failed to create OpenAI chat completion.",
+      cause: error,
+    });
   }
 };
-
-// export const writeMessage = async (
-//   configBlock: IBlock,
-// ){
-//   if(configBlock.id === 'start_block'){
-//     // get block
-//   }
-
-// }
