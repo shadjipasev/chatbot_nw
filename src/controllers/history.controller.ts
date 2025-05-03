@@ -1,5 +1,6 @@
 import { Request, Response } from "restify";
 import { searchHistory } from "../services/flow.service";
+import { BadRequestError } from "restify-errors";
 
 export const getHistoryById = async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -12,7 +13,9 @@ export const getHistoryById = async (req: Request, res: Response) => {
     console.log(history);
     return history;
   } catch (error) {
-    console.log("getHistoryById error :" + error);
-    throw error;
+    throw new BadRequestError({
+      message: "Unable to get history record",
+      cause: error,
+    });
   }
 };
