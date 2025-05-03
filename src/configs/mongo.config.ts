@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { InternalServerError } from "restify-errors";
 
 const connectMongo = async () => {
   try {
@@ -7,7 +8,10 @@ const connectMongo = async () => {
     );
     console.log("MongoDB connected");
   } catch (error) {
-    console.error("MongoDB connection error:", error);
+    throw new InternalServerError({
+      message: "MongoDB connection error",
+      cause: error,
+    });
   }
 };
 
