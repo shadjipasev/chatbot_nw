@@ -25,9 +25,8 @@ export async function createApp() {
   const server = restify.createServer();
 
   if (process.env.NODE_ENV !== "test") {
-    await setConfig();
-
     await connectMongo();
+    await setConfig();
 
     server.listen(3000, () => {
       console.log("%s listening at %s", server.name, server.url);
