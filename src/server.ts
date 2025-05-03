@@ -24,6 +24,16 @@ try {
 export async function createApp() {
   const server = restify.createServer();
 
+  if (process.env.NODE_ENV !== "test") {
+    await setConfig();
+
+    await connectMongo();
+
+    server.listen(3000, () => {
+      console.log("%s listening at %s", server.name, server.url);
+    });
+  }
+
   const respond = (
     req: restify.Request,
     res: restify.Response,
@@ -51,16 +61,6 @@ export async function createApp() {
   server.use(restify.plugins.bodyParser());
   server.use(restify.plugins.queryParser());
   server.on("uncaughtException", errorHandler);
-
-  if (process.env.NODE_ENV !== "test") {
-    await setConfig();
-
-    await connectMongo();
-
-    server.listen(3000, () => {
-      console.log("%s listening at %s", server.name, server.url);
-    });
-  }
 
   return { server, io };
 }
