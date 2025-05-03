@@ -8,11 +8,11 @@ import { BadRequestError } from "restify-errors";
 export const createConfig = async (req: Request, res: Response) => {
   const jsonCongif = req.body;
   try {
-    const createdConfif = await createChatConfig(jsonCongif);
+    const createdConfig = await createChatConfig(jsonCongif);
 
-    res.json({
+    res.send(201, {
       message: "Configuration was successfully uploaded.",
-      data: createdConfif,
+      data: createdConfig,
     });
   } catch (error) {
     throw new BadRequestError({
@@ -25,7 +25,8 @@ export const createConfig = async (req: Request, res: Response) => {
 export const getLatestConfig = async (req: Request, res: Response) => {
   try {
     const latestConfig = await getMostRecentConfig();
-    res.json({
+
+    res.send(200, {
       message: "Retrieving latest chatbot configuration.",
       data: latestConfig,
     });
