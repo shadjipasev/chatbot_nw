@@ -1,6 +1,5 @@
 import { Socket } from "socket.io";
-import { IMessage } from "../models/chat-history.schema";
-import { ChatRole } from "../models/types/chat.interface";
+import { ChatRole, IMessage } from "../models/types/chat.interface";
 import { IBlock } from "../models/types/config.interface";
 import { addMessageToConversation } from "./flow.service";
 import { InternalServerError } from "restify-errors";
