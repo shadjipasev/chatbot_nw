@@ -33,15 +33,13 @@ export const sendInitialMessage = async () => {
   try {
     await sendMessageToClient(startingBlock.content, startingBlock);
 
-    await ChatHistory.create({
-      messages: [
-        {
-          role: ChatRole.Bot,
-          message: startingBlock.content,
-          currentBlock: startingBlock,
-        },
-      ],
-    });
+    const messageBlock: IMessage = {
+      role: ChatRole.Bot,
+      message: startingBlock.content,
+      currentBlock: startingBlock,
+    };
+
+    await addMessageToConversation(messageBlock);
 
     setCurrentBlock(startingBlock.next);
   } catch (error) {
