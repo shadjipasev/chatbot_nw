@@ -2,8 +2,10 @@ import * as ioc from "socket.io-client";
 import * as restify from "restify";
 import { Server as SocketIoServer } from "socket.io";
 import { createApp } from "../src/server";
-import { IBlock, IChatConfig } from "src/models/types/config.interface";
+import { IBlock, IChatConfig } from "../src/models/types/config.interface";
 import { sendMessageToClient } from "src/services/socket.service";
+import { getBlock } from "src/services/chatbot-config.service";
+import { intentDetection } from "../src/services/openai.service";
 
 describe("Flow Controller", () => {
   let clientSocket: ioc.Socket;
@@ -25,7 +27,7 @@ describe("Flow Controller", () => {
   });
 
   describe("Test write_message type", () => {
-    it("should send content of the block to client", async () => {
+    it("should send content of the block to client", () => {
       const mockConfig: IChatConfig = {
         blocks: <IBlock[]>[
           {
@@ -39,10 +41,56 @@ describe("Flow Controller", () => {
       };
       currentBlock = mockConfig.blocks[0];
 
-      io.emit("write_message", currentBlock.content);
       clientSocket.once("write_message", (message) => {
         expect(message).toBe(currentBlock.content);
       });
+
+      io.emit("write_message", currentBlock.content);
+
+      io.on("connection", (mySocket) => {
+        expect(mySocket).toBeDefined();
+      });
+    });
+  });
+
+  describe("Test detect_intent type", () => {
+    const mockConfig: IChatConfig = {
+      blocks: <IBlock[]>[
+        {
+          id: "detect_intent",
+          type: "detect_intent",
+          intents: [
+            {
+              name: "weather",
+              next: "weather_response",
+            },
+          ],
+          fallback: "not_understood",
+        },
+        {
+          id: "weather_response",
+          type: "write_message",
+          content: "The weather today is sunny.",
+          next: "anything_else",
+        },
+      ],
+
+      startBlock: "start_block",
+    };
+
+    const message = "Is it sunny?";
+    it("detect correct intent and respond accordingly", async () => {
+      currentBlock = mockConfig.blocks[0];
+      const intendedReply = await intentDetection(
+        mockConfig,
+        message,
+        currentBlock
+      );
+
+      clientSocket.once("detect_intent", (clientMessage) => {
+        expect(clientMessage).toBe(intendedReply.content);
+      });
+      io.emit("detect_intent", intendedReply.content);
       io.on("connection", (mySocket) => {
         expect(mySocket).toBeDefined();
       });
