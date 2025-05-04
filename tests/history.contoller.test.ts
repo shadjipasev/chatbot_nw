@@ -1,5 +1,5 @@
-import { ChatRole, IMessage } from "./../src/models/types/chat.interface";
-import { IChatHistory } from "../src/models/chat-history.schema";
+import { IChatHistory, IMessage } from "./../src/models/types/chat.interface";
+// import { IChatHistory } from "../src/models/chat-history.schema";
 import { IBlock } from "../src/models/types/config.interface";
 import { createApp } from "../src/server";
 import { searchHistory } from "../src/services/flow.service";
