@@ -15,7 +15,6 @@ export const sendMessageToClient = async (
   currentBlock: IBlock
 ) => {
   try {
-    // console.log(activeSocket.)
     activeSocket.emit("message_from_server", message);
 
     const messageBlock: IMessage = {

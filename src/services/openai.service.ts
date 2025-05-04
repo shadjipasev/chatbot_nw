@@ -40,9 +40,6 @@ export const intentDetection = async (
       return getBlock(configFlow, configBlock.fallback);
     }
 
-    console.log("33 (openai) recognisedIntent -" + recognisedIntent);
-    // console.log("33 (openai) nextBlockId -" + nextBlockId);
-
     return getBlock(configFlow, recognisedIntent.next);
   } catch (error) {
     throw new InternalServerError({
