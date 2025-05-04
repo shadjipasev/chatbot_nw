@@ -1,7 +1,7 @@
 import { HistoryDoc } from "./../models/chat-history.schema";
 import { ChatHistory } from "../models/chat-history.schema";
-import { ChatRole } from "../models/types/chat.interface";
-import { IChatHistory, IMessage } from "../models/chat-history.schema";
+import { ChatRole, IMessage } from "../models/types/chat.interface";
+// import { IChatHistory, IMessage } from "../models/chat-history.schema";
 import { getBlock, getMostRecentConfig } from "./chatbot-config.service";
 import { sendMessageToClient } from "./socket.service";
 import { FilterQuery, Mongoose } from "mongoose";
