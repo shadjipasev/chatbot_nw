@@ -4,12 +4,13 @@ import {
   getMostRecentConfig,
 } from "../services/chatbot-config.service";
 import { BadRequestError } from "restify-errors";
+import { setConfig } from "../services/flow.service";
 
 export const createConfig = async (req: Request, res: Response) => {
   const jsonCongif = req.body;
   try {
     const createdConfig = await createChatConfig(jsonCongif);
-
+    await setConfig();
     res.send(201, {
       message: "Configuration was successfully uploaded.",
       data: createdConfig,
