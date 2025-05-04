@@ -10,7 +10,7 @@ export interface IMessage {
   role: ChatRole;
   message: string;
   currentBlock: IBlock;
-  timestamp: Date;
+  timestamp?: Date;
 }
 
 export interface IChatHistory {
