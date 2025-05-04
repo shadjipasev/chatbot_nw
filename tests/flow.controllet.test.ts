@@ -3,9 +3,9 @@ import * as restify from "restify";
 import { Server as SocketIoServer } from "socket.io";
 import { createApp } from "../src/server";
 import { IBlock, IChatConfig } from "../src/models/types/config.interface";
-import { sendMessageToClient } from "src/services/socket.service";
-import { getBlock } from "src/services/chatbot-config.service";
 import { intentDetection } from "../src/services/openai.service";
+
+jest.mock("../src/services/openai.service");
 
 describe("Flow Controller", () => {
   let clientSocket: ioc.Socket;
@@ -73,24 +73,48 @@ describe("Flow Controller", () => {
           content: "The weather today is sunny.",
           next: "anything_else",
         },
+        {
+          id: "not_understood",
+          type: "write_message",
+          content:
+            "I'm sorry, I didn't understand that. I can talk only about weather, time and cars.",
+          next: "detect_intent",
+        },
       ],
-
       startBlock: "start_block",
     };
 
-    const message = "Is it sunny?";
+    currentBlock = mockConfig.blocks[0];
+
     it("detect correct intent and respond accordingly", async () => {
-      currentBlock = mockConfig.blocks[0];
-      const intendedReply = await intentDetection(
+      const fallbackBlock = mockConfig.blocks[2].content;
+      const message = "Is it sunny?";
+      (intentDetection as jest.Mock).mockResolvedValue({
+        mockConfig,
+        message,
+        currentBlock,
+      });
+
+      clientSocket.once("detect_intent", (clientMessage) => {
+        expect(clientMessage).toBe(fallbackBlock);
+      });
+      io.emit("detect_intent", fallbackBlock);
+      io.on("connection", (mySocket) => {
+        expect(mySocket).toBeDefined();
+      });
+    });
+
+    it("openai doesn't recognize intent", async () => {
+      const message = "What is the time?";
+      const intendedReply: IBlock = await intentDetection(
         mockConfig,
         message,
         currentBlock
       );
-
-      clientSocket.once("detect_intent", (clientMessage) => {
+      clientSocket.once("fallback", (clientMessage) => {
         expect(clientMessage).toBe(intendedReply.content);
       });
-      io.emit("detect_intent", intendedReply.content);
+      io.emit("fallback", intendedReply.content);
       io.on("connection", (mySocket) => {
         expect(mySocket).toBeDefined();
       });
