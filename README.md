@@ -35,7 +35,16 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Chatbot build on Restify, Typescript and Socket.IO that utilizes intent recognition by using OpenAI API. Additionally the workflow of the chatbot can be configured by uploading JSON configuration file.
+Chatbot build on Restify, Typescript and Socket.IO that utilizes intent recognition by using OpenAI API. Additionally the workflow of the chatbot can be configured by uploading JSON configuration file. 
+
+The flow can be structured by three types of blocks:
+```js
+enum BlockTypes {
+  WriteMessage = "write_message",
+  WaitForResponse = "wait_for_response",
+  DetectIntent = "detect_intent",
+}
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -75,7 +84,7 @@ Chatbot build on Restify, Typescript and Socket.IO that utilizes intent recognit
    OPENAI_API_KEY = 'ENTER YOUR API';
    ```
 
- 4. Start application
+ 5. Start application
    ```js
    npm start
    ```
