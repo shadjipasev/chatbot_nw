@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { sendInitialMessage, setConfig } from "../services/flow.service";
+import { sendInitialMessage } from "../services/flow.service";
 import { flowController } from "./flow.controller";
 import { setActiveSocket } from "../services/socket.service";
 import { InternalServerError } from "restify-errors";

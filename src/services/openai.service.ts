@@ -1,9 +1,5 @@
 import { openai } from "../server";
-import {
-  BlockTypes,
-  IBlock,
-  IChatConfig,
-} from "src/models/types/config.interface";
+import { IBlock, IChatConfig } from "src/models/types/config.interface";
 import { getBlock } from "./chatbot-config.service";
 import { InternalServerError } from "restify-errors";
 

@@ -1,7 +1,6 @@
 import { IBlock, IChatConfig } from "src/models/types/config.interface";
 import { ChatConfig } from "../models/config.schema";
 import { InternalServerError, NotFoundError } from "restify-errors";
-import { error } from "console";
 
 export const createChatConfig = async (
   jsonConfig: IChatConfig

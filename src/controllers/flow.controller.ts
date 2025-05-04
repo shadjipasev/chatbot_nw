@@ -1,6 +1,5 @@
 import { ChatRole } from "./../models/types/chat.interface";
 import { BlockTypes } from "./../models/types/config.interface";
-import {} from "../services/chatbot-config.service";
 import { intentDetection } from "../services/openai.service";
 import { sendMessageToClient } from "../services/socket.service";
 import {
