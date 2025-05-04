@@ -1,0 +1,70 @@
+{
+  "blocks": [
+    {
+      "id": "start_block",
+      "type": "write_message",
+      "content": "Hello! How can I help you today?",
+      "next": "wait_for_response"
+    },
+    {
+      "id": "wait_for_response",
+      "type": "wait_for_response",
+      "next": "detect_intent"
+    },
+    {
+      "id": "detect_intent",
+      "type": "detect_intent",
+      "intents": [
+        { "name": "weather", "next": "weather_response" },
+        { "name": "time", "next": "time_response" }
+      ],
+      "fallback": "not_understood"
+    },
+    {
+      "id": "weather_response",
+      "type": "write_message",
+      "content": "The weather today is sunny.",
+      "next": "anything_else"
+    },
+    {
+      "id": "time_response",
+      "type": "write_message",
+      "content": "Time now is 10:00 PM",
+      "next": "anything_else"
+    },
+    {
+      "id": "detect_yes_no",
+      "type": "detect_intent",
+      "intents": [
+        { "name": "yes", "next": "offer_more_help" },
+        { "name": "no", "next": "end_chat" }
+      ],
+      "fallback": "not_understood"
+    },
+    {
+      "id": "offer_more_help",
+      "type": "write_message",
+      "content": "How to assist you more?",
+      "next": "wait_for_response"
+    },
+    {
+      "id": "anything_else",
+      "type": "write_message",
+      "content": "Do you need anything else?",
+      "next": "detect_yes_no"
+    },
+    {
+      "id": "end_chat",
+      "type": "write_message",
+      "content": "Have a nice day!",
+      "next": "detect_intent"
+    },
+    {
+      "id": "not_understood",
+      "type": "write_message",
+      "content": "I'm sorry, I didn't understand that. I can talk only about weather, time and cars.",
+      "next": "detect_intent"
+    }
+  ],
+  "startBlock": "start_block"
+}
